@@ -11,6 +11,14 @@ class CandidateController extends Controller
 {
     const COST_OF_CONTACT = 5;
 
+    private function errorResponse($code, $message) {
+        return response(json_encode([
+            'status' => 'error',
+            'message' => $message,
+        ]), $code)
+        ->header('Content-Type', 'application/json');
+    }
+
     public function index(){
         $candidates = Candidate::all();
         $coins = Company::find(1)->wallet->coins;
@@ -24,23 +32,28 @@ class CandidateController extends Controller
 
         // Don't allow contact if you don't have enough coins
         if ($company->wallet->coins < $costOfContact) {
-            return response(json_encode([
-                'status' => 'error',
-                'message' => 'insufficient coins',
-            ]), 424)
-            ->header('Content-Type', 'application/json');
+            return $this->errorResponse(424, 'insufficient coins');
         }
 
-        // Only deduct cost if company has not contacted this candidate before
-        $candidateId = $request->getContent()->candidate;
-        Log::info('contacting candidate #' . $candidateId);
-        $company->wallet->decrement('coins', $costOfContact);
+        // User input can be dangerous, check if this is a correctly formatted numerical ID
+        $userInput = json_decode($request->getContent());
+        if (!is_object($userInput) || !property_exists($userInput, 'candidate') || !is_integer($userInput->candidate)) {
+            return $this->errorResponse(400, 'invalid candidate id');
+        }
+        $candidateId = $userInput->candidate;
 
-        // @todo
-        // Check if candidate exists
+        // Only allow existing IDs for existing candidates
+        $candidate = Candidate::find($candidateId);
+        if ($candidate === null) {
+            return $this->errorResponse(404, 'candidate does not exist');
+        }
 
-        // Mark candidate as contacted if they are not marked as such
-        $company->candidates()->attach(1);
+        // If the company hasn't contact this candidate before,
+        // deduct balance from wallet and mark as contacted
+        if (!$company->candidates->contains($candidate)) {
+            $company->wallet->decrement('coins', $costOfContact);
+            $company->candidates()->attach($candidate);
+        }
 
         // @todo
         // Send mail to contact

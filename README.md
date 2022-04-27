@@ -131,6 +131,19 @@ The route is already defined for me, which is nice. I don't think it's necessary
 - Mark candidate as contacted
 - Deduct balance
 
+Using a new migration (`php artisan make:migration`), I created a new database table to serve as a pivot table for the many-to-many relationship between companies and candidates ('every candidate can be contacted by multiple companies'). When that was set up and the relationships were defined both ways in the models, I started to implement aforementioned requirements.
+
+The implementation of the contact function start with checking the balance to have at least COST_OF_CONTACT amount of money. That's a constant I created earlier already to pass to the front end via blade (so the client-side balance check is updated in one go when the price to contact a candidate changes).
+
+When that's all good, the function checks the validity of the user input in the request. I opted to only send the candidate ID in a JSON object along with the CSRF token, but that still could contain malicious data. I check for a valid stringified object that contains the 'candidate' property which should be a valid integer (since candidate IDs are integers).
+
+If a candidate with that ID exists, the function checks if the company has contacted this candidate before. If not, the cost of contacting is deducted from their wallet and the fact that this company contacted the candidate is stored.
+
+I should point out that would any of these checks fail, I respond with an appropriate HTTP status code and short but descriptive human readable error message, which I intend on showing to the user in the browser.
+
+Lastly, the email to the candidate is sent out. Sending emails can take a while and waiting for them to get sent may take some time, but allows for error checking should anything go wrong. That way, we can let the user know. Doing it asynchronously after sending the HTTP response gets an answer to the user quicker, but doesn't allow for that check.
+
+A failed email would not mean the balance was deducted for no reason, as a company can contact a candidate multiple times without additional cost, as per my assumption described above.
 
 ## Notes
 
