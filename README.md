@@ -102,13 +102,13 @@ I'll make a few assumptions:
 - The UI should indicate when you last contacted a candidate
 - Ideally, there's some kind of spam protection in place (eg. limit on contacts per day / based on email activity) → not developing this as part of the assignment
 
-### Client-side
+#### Client-side
 
 UX wise, I think it makes most sense to implement the contact button asynchronously. Sticking to the POST request would still be possible with a synchronous form submit, but allows for a little less control on the UX front, I feel like. I will start there, so let's take a look at the front-end of this page.
 
-The obvious choice seems to be to add a `contactCandidate()` method to the `Candidates.vue` component and trigger it with a simple `@click` event. There, the POST request could be sent and the user could be informed of the result when the network request resolves. However, it would be more user friendly to do a quick balance check client-side before even sending the network request, as it's not needed if the wallet balance is too low. That way, it saves the user some time (since the feedback comes faster) and bandwidth (since no network request needs to be sent).
+The obvious choice seems to be to add a `contactCandidate()` method to the `Candidates.vue` component and trigger it with a simple `@click` event. There, the POST request could be sent and the user could be informed of the result when the network request resolves. That's assuming identification of the company would be through a cookie that was also sent over. However, it would be more user friendly to do a quick balance check client-side before even sending the network request, as it's not needed if the wallet balance is too low. That way, it saves the user some time (since the feedback comes faster) and bandwidth (since no network request needs to be sent).
 
-The Candidates component has no knowledge of the current company's balance though, so we'll need to emit the event to be handled by its parent component. To accomplish that, I used ` @click="$emit('contact-candidate')"` on the button and `@contact-candidate.once="contactCandidate"` on the candidates HTML element to listen to the emitted event. The `.once` modifier helps towards our goal (with a client-side check) of not spamming the candidate with mails (if the company user would click the button more than once).
+The Candidates component has no knowledge of the current company's balance though, so we'll need to emit the event to be handled by its parent component. To accomplish that, I used ` @click="$emit('contact-candidate', candidate)"` on the button and `@contact-candidate="contactCandidate"` on the candidates HTML element to listen to the emitted event.
 
 The callback function is defined in the main template (blade file) and added to the Vue component in `app.js`:
 
@@ -118,7 +118,16 @@ methods: {
 },
 ```
 
-The implementation of that function should check the balance, send the request to contact the candidate (if balance allows), and show feedback to the user (error with reason or success message). I also want it to visually disable the button, so the user understands that `.once` modifier behaviour.
+The implementation of that function should check the balance, send the request to contact the candidate (if balance allows), and show feedback to the user (error with reason or success message). Once the balance check was implemented and the client was ready to send the request, I turned to the implementation of that route.
+
+#### Server-side
+
+The route is already defined for me, which is nice. I don't think it's necessary to change the HTTP verb, as it complies with REST standards. The implementation should do a few things:
+
+- Check balance
+- Send mail to candidate
+- Mark candidate as contacted
+- Deduct balance
 
 
 ## Notes

@@ -11,8 +11,11 @@ class Company extends Model
 
     protected $with = ['wallet'];
 
-    public function wallet()
-    {
+    public function wallet() {
         return $this->hasOne(Wallet::class);
+    }
+
+    public function candidates() {
+        return $this->belongsToMany(Candidate::class, 'company_candidates')->withTimestamps();
     }
 }
