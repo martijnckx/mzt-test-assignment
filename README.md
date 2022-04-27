@@ -16,10 +16,11 @@ This is my continuation on [MyZenTeam code test assignment](https://github.com/s
 1. Get the source code on your local machine by pulling this repo
 2. Navigate to the root folder
 3. Run `composer install`
-4. Run `php artisan key:generate`
-5. Run `npm ci && npm run dev`
-6. Create a MySQL database
-7. Create a MySQL user and grant permission to this new database (but nothing extra 😉). I used this command, generated in [TablePlus](https://tableplus.com/):
+4. Run `cp .env.example .env`
+5. Run `php artisan key:generate`
+6. Run `npm ci && npm run dev`
+7. Create a MySQL database
+8. Create a MySQL user and grant permission to this new database (but nothing extra 😉). I used this command, generated in [TablePlus](https://tableplus.com/):
 
     ```SQL
     CREATE USER 'myzenteam_user'@'localhost' IDENTIFIED BY 'xiqhuqwJ9_jp';
@@ -29,9 +30,10 @@ This is my continuation on [MyZenTeam code test assignment](https://github.com/s
     FLUSH PRIVILEGES;
     ```
 
-8. Run `php artisan migrate`
-9. Run `php artisan db:seed`
-10. Run `php artisan serve`
+9. Add the MySQL info into the `.env` file at `DB_*`
+10. Run `php artisan migrate`
+11. Run `php artisan db:seed`
+12. Run `php artisan serve`
 
 ## Process
 

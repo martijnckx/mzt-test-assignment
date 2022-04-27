@@ -32,11 +32,14 @@ class CandidateController extends Controller
         }
 
         // Only deduct cost if company has not contacted this candidate before
-        Log::info($request->getContent());
+        $candidateId = $request->getContent()->candidate;
+        Log::info('contacting candidate #' . $candidateId);
         $company->wallet->decrement('coins', $costOfContact);
 
         // @todo
-        // Mark candidate as contacted
+        // Check if candidate exists
+
+        // Mark candidate as contacted if they are not marked as such
         $company->candidates()->attach(1);
 
         // @todo
