@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mt-20">
   <div class="p-10">
   <h1 class="text-4xl font-bold">Candidates</h1>
         </div>

@@ -32,13 +32,14 @@ This is my continuation on [MyZenTeam code test assignment](https://github.com/s
 
 9. Add the MySQL info into the `.env` file at `DB_*`
 10. Configure the rest of the `.env` file (ie `APP_*` and `MAIL_*` vars)
+11. Optionally, add `SKIP_MAILS=true` to the `.env` file to not actually send contact and hire emails
 11. Run `php artisan migrate`
 12. Run `php artisan db:seed`
 13. Run `php artisan serve`
 
 ## Process
 
-(I wrote this livee as I was working, apologies for mixing past and present tense 😅)
+(I wrote this live as I was working, apologies for mixing past and present tense 😅)
 
 ### Game plan
 
@@ -148,11 +149,19 @@ Lastly, the function checks if the company has contacted this candidate before. 
 
 #### Presenting feedback to the user
 
-Now it's time to process to reply of the server in the browser, and show the error message to the user.
+Now it's time to process to reply of the server in the browser, and show the error message to the user. For that, I decided to create a `Notifications.vue` component which handles showing and hiding notification banners. It exposes a `showNotification(message, style = 'neutral')` method and allows for `neutral`, `positive`, and `negative` styles (and defaults to `neutral` for everything else).
+
+In the parent, I added a `ref="notifications"` attribute to the notifications element, and called its method with `this.$refs.notifications.showNotification()`.
+
+If for some reason contacting the candidate failed, the user gets a red notification with the error message in it. If all went well, the notifcation is green with a success message in it, and the value of the wallet is set to the updated wallet value (which may be the same as before if a candidate was already contacted by this company in the past).
+
+I also want to indicate to the user that the application is working on it as soon as the user clicks the button, so I added another notification to signal that. Another option would be to add a spinner or change the button text to something like 'Contacting' or 'Please wait...', or disable the button temporarily.
 
 ## Notes
 
-- The database doesn't seem to have foreign key constraints set. It could be good practise to configure these.
+- The database doesn't seem to have foreign key constraints set on existing tables. It could be good practise to configure these.
 - Images need alt tags
 - We are leaking all email addresses by blade template injection of the entire candidates object
 - Client side balance check should take into account users who are already contacted
+- Made wallet bar fixed position to still see it when scrolling
+- todo: Shorter functions

@@ -22,6 +22,7 @@
 
 <body>
    <div id="app">
+      <notifications ref="notifications"></notifications>
       <wallet :coins="coins"></wallet>
       <candidates @contact-candidate="contactCandidate" :candidates="{{ json_encode($candidates) }}">
       </candidates>
@@ -30,17 +31,15 @@
    <script>
       let coins = {{ $coins ?? 0}};
       function contactCandidate(candidate) {
-         // @todo
-         // show feedback to the user (error with reason / success)
-         // disable the contact button, since you can only press it once → note "already contacted" (?)
+         // @todo disable the contact button, since you can only press it once → note "already contacted" (?)
 
-         // This comes from the server so it only needs to be changed once when the cost changes in the future
          const costOfContact = {{ $costOfContact }};
 
          if (this.coins < costOfContact) {
-            alert('not enough coins'); //temp
+            this.$refs.notifications.showNotification('Error: insufficient coins', 'negative');
             return;
          }
+         this.$refs.notifications.showNotification(`Contacting ${candidate.name}...`);
 
          fetch('/candidates-contact', {
             method: 'POST',
@@ -54,13 +53,14 @@
          })
             .then(response => response.json())
             .then(data => {
-               this.coins -= costOfContact;
-               console.log(data)
-            });
+               if (data.status === 'success') {
+                  this.coins = data.coins;
+                  this.$refs.notifications.showNotification('Candidate has been contacted!', 'positive')
+               } else {
+                  this.$refs.notifications.showNotification(`Error: ${data.message}`, 'negative')
 
-         console.log(`You now have ${coins} coins`);
-         console.log('Contacting candidate...');
-         console.log(candidate);
+               }
+            });
       }
    </script>
    <script src="{{ mix('/js/app.js') }}"></script>

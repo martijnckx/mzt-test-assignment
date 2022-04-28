@@ -54,7 +54,7 @@ class CandidateController extends Controller
         // Send mail to contact
         // Just passing the candidate works since it has a `name` and `email` property
         try {
-            Mail::to($candidate)->send(new CandidateContacted($company, $candidate));
+            env('SKIP_MAILS') || Mail::to($candidate)->send(new CandidateContacted($company, $candidate));
         }
         catch(\Exception $e){
             return $this->errorResponse(500, 'email failed to send');

@@ -21,6 +21,7 @@ window.Vue = require('vue').default;
 
 Vue.component('candidates', require('./components/Candidates.vue').default);
 Vue.component('wallet', require('./components/Wallet.vue').default);
+Vue.component('notifications', require('./components/Notifications.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
