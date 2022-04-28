@@ -22,8 +22,19 @@ class CandidateController extends Controller
         ->header('Content-Type', 'application/json');
     }
 
+    private function isJson($string) {
+        json_decode($string);
+        return json_last_error() === JSON_ERROR_NONE;
+     }
+
     public function index(){
+        $company = Company::find(1);
         $candidates = Candidate::all();
+        foreach ($candidates as $candidate) {
+            $candidate->contacted = $candidate->contactedBy->contains($company);
+            unset($candidate['email']);
+            unset($candidate['contactedBy']);
+        }
         $coins = Company::find(1)->wallet->coins;
         $costOfContact = CandidateController::COST_OF_CONTACT;
         return view('candidates.index', compact('candidates', 'coins', 'costOfContact'));
@@ -32,11 +43,6 @@ class CandidateController extends Controller
     public function contact(Request $request){
         $company = Company::find(1);
         $costOfContact = CandidateController::COST_OF_CONTACT;
-
-        // Don't allow contact if you don't have enough coins
-        if ($company->wallet->coins < $costOfContact) {
-            return $this->errorResponse(424, 'insufficient coins');
-        }
 
         // User input can be dangerous, check if this is a correctly formatted numerical ID
         $userInput = json_decode($request->getContent());
@@ -60,12 +66,20 @@ class CandidateController extends Controller
             return $this->errorResponse(500, 'email failed to send');
         }
 
-        // If the company hasn't contact this candidate before,
-        // deduct balance from wallet and mark as contacted
+        // Don't allow contact if you don't have enough coins
         if (!$company->candidates->contains($candidate)) {
+            if ($company->wallet->coins < $costOfContact) {
+                return $this->errorResponse(424, 'insufficient coins');
+            } 
+            // If the company hasn't contact this candidate before,
+            // deduct balance from wallet and mark as contacted
             $company->wallet->decrement('coins', $costOfContact);
-            $company->candidates()->attach($candidate);
         }
+
+        // Save every time a company contacts a candidate, for logging purposes
+        // eg spam detection, abuse of the system by companies
+        $company->candidates()->attach($candidate);
+
 
         return response(json_encode([
             'status' => 'success',

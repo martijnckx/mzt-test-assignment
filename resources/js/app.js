@@ -34,9 +34,11 @@ const app = new Vue({
     data() {
         return {
             coins: coins,
+            candidates: candidates,
         }
     },
     methods: {
         contactCandidate: contactCandidate,
+        updateCandidate: updateCandidate,
     },
 });

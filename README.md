@@ -160,8 +160,7 @@ I also want to indicate to the user that the application is working on it as soo
 ## Notes
 
 - The database doesn't seem to have foreign key constraints set on existing tables. It would be good practise to configure these.
-- I added alt tags to the images
-- We are leaking all email addresses by blade template injection of the entire candidates object
-- Client side balance check should take into account users who are already contacted
+- Added alt tags to the images
+- Fixed the fact that the app was leaking all email addresses through the blade template (printing the entire candidates object)
 - Made wallet bar fixed position to still see it when scrolling
 - @todo: Shorter functions

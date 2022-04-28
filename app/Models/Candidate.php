@@ -9,7 +9,7 @@ class Candidate extends Model
 {
     use HasFactory;
 
-    public function companies() {
+    public function contactedBy() {
         return $this->belongsToMany(Company::class, 'company_candidates')->withTimestamps();
     }
 }

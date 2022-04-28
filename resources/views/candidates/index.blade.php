@@ -24,18 +24,28 @@
    <div id="app">
       <notifications ref="notifications"></notifications>
       <wallet :coins="coins"></wallet>
-      <candidates @contact-candidate="contactCandidate" :candidates="{{ json_encode($candidates) }}">
+      <candidates @contact-candidate="contactCandidate" :candidates="candidates">
       </candidates>
    </div>
 
    <script>
       let coins = {{ $coins ?? 0}};
+      let candidates = {!! json_encode($candidates, JSON_HEX_TAG) !!};
+      
+      function updateCandidate(candidate) {
+         for (let i = 0; i < this.candidates.length; i++) {
+            if (this.candidates[i].id === candidate.id) {
+               this.candidates[i].contacted = candidate.contacted;
+            }
+         }
+      }
+
       function contactCandidate(candidate) {
          // @todo disable the contact button, since you can only press it once → note "already contacted" (?)
 
          const costOfContact = {{ $costOfContact }};
 
-         if (this.coins < costOfContact) {
+         if (this.coins < costOfContact && !candidate.contacted) {
             this.$refs.notifications.showNotification('Error: insufficient coins', 'negative');
             return;
          }
@@ -54,10 +64,12 @@
             .then(response => response.json())
             .then(data => {
                if (data.status === 'success') {
+                  candidate.contacted = true;
                   this.coins = data.coins;
-                  this.$refs.notifications.showNotification(`${candidate.name} has been contacted!`, 'positive')
+                  this.updateCandidate(candidate);
+                  this.$refs.notifications.showNotification(`${candidate.name} has been contacted!`, 'positive');
                } else {
-                  this.$refs.notifications.showNotification(`Error: ${data.message}`, 'negative')
+                  this.$refs.notifications.showNotification(`Error: ${data.message}`, 'negative');
 
                }
             });

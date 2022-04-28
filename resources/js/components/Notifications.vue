@@ -24,10 +24,6 @@ export default {
 
             if (!style in colours) style = 'neutral';
 
-            console.log(colours);
-            console.log(style);
-            console.log(colours[style]);
-
             this.notifications.push({
                 id: `${Date.now()}${Math.floor(Math.random() * 100)}`,
                 message: message,
