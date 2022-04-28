@@ -31,9 +31,10 @@ This is my continuation on [MyZenTeam code test assignment](https://github.com/s
     ```
 
 9. Add the MySQL info into the `.env` file at `DB_*`
-10. Run `php artisan migrate`
-11. Run `php artisan db:seed`
-12. Run `php artisan serve`
+10. Configure the rest of the `.env` file (ie `APP_*` and `MAIL_*` vars)
+11. Run `php artisan migrate`
+12. Run `php artisan db:seed`
+13. Run `php artisan serve`
 
 ## Process
 
@@ -104,7 +105,7 @@ I'll make a few assumptions:
 - The UI should indicate when you last contacted a candidate
 - Ideally, there's some kind of spam protection in place (eg. limit on contacts per day / based on email activity) → not developing this as part of the assignment
 
-#### Client-side
+#### Clicking the button
 
 UX wise, I think it makes most sense to implement the contact button asynchronously. Sticking to the POST request would still be possible with a synchronous form submit, but allows for a little less control on the UX front, I feel like. I will start there, so let's take a look at the front-end of this page.
 
@@ -122,7 +123,7 @@ methods: {
 
 The implementation of that function should check the balance, send the request to contact the candidate (if balance allows), and show feedback to the user (error with reason or success message). Once the balance check was implemented and the client was ready to send the request, I turned to the implementation of that route.
 
-#### Server-side
+#### Handling the request
 
 The route is already defined for me, which is nice. I don't think it's necessary to change the HTTP verb, as it complies with REST standards. The implementation should do a few things:
 
@@ -137,16 +138,21 @@ The implementation of the contact function start with checking the balance to ha
 
 When that's all good, the function checks the validity of the user input in the request. I opted to only send the candidate ID in a JSON object along with the CSRF token, but that still could contain malicious data. I check for a valid stringified object that contains the 'candidate' property which should be a valid integer (since candidate IDs are integers).
 
-If a candidate with that ID exists, the function checks if the company has contacted this candidate before. If not, the cost of contacting is deducted from their wallet and the fact that this company contacted the candidate is stored.
-
 I should point out that would any of these checks fail, I respond with an appropriate HTTP status code and short but descriptive human readable error message, which I intend on showing to the user in the browser.
 
-Lastly, the email to the candidate is sent out. Sending emails can take a while and waiting for them to get sent may take some time, but allows for error checking should anything go wrong. That way, we can let the user know. Doing it asynchronously after sending the HTTP response gets an answer to the user quicker, but doesn't allow for that check.
+Afterwards, the email to the candidate is sent out. Sending emails can take a while and waiting for them to get sent may take some time, but allows for error checking should anything go wrong. That way, we can let the user know. Doing it asynchronously after sending the HTTP response gets an answer to the user quicker, but doesn't allow for that check. During testing I used SMTP from Mailgun.
 
-A failed email would not mean the balance was deducted for no reason, as a company can contact a candidate multiple times without additional cost, as per my assumption described above.
+To create the Mailable, I used `php artisan make:mail CandidateContacted`. For the template, I created a new folder at `/resources/views/emails`. I would set the Reply-To field to the email address of the company, but they don't have one in this app. I didn't add it for now.
+
+Lastly, the function checks if the company has contacted this candidate before. If not, the cost of contacting is deducted from their wallet and the fact that this company contacted the candidate is stored.
+
+#### Presenting feedback to the user
+
+Now it's time to process to reply of the server in the browser, and show the error message to the user.
 
 ## Notes
 
 - The database doesn't seem to have foreign key constraints set. It could be good practise to configure these.
 - Images need alt tags
-- We are leaking the all email addresses by blade template injection of the entire candidates object
+- We are leaking all email addresses by blade template injection of the entire candidates object
+- Client side balance check should take into account users who are already contacted

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
+use App\Mail\CandidateContacted;
 use App\Models\Candidate;
 use App\Models\Company;
+
 
 class CandidateController extends Controller
 {
@@ -48,15 +51,21 @@ class CandidateController extends Controller
             return $this->errorResponse(404, 'candidate does not exist');
         }
 
+        // Send mail to contact
+        // Just passing the candidate works since it has a `name` and `email` property
+        try {
+            Mail::to($candidate)->send(new CandidateContacted($company, $candidate));
+        }
+        catch(\Exception $e){
+            return $this->errorResponse(500, 'email failed to send');
+        }
+
         // If the company hasn't contact this candidate before,
         // deduct balance from wallet and mark as contacted
         if (!$company->candidates->contains($candidate)) {
             $company->wallet->decrement('coins', $costOfContact);
             $company->candidates()->attach($candidate);
         }
-
-        // @todo
-        // Send mail to contact
 
         return response(json_encode([
             'status' => 'success',
