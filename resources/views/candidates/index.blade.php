@@ -55,7 +55,7 @@
             .then(data => {
                if (data.status === 'success') {
                   this.coins = data.coins;
-                  this.$refs.notifications.showNotification('Candidate has been contacted!', 'positive')
+                  this.$refs.notifications.showNotification(`${candidate.name} has been contacted!`, 'positive')
                } else {
                   this.$refs.notifications.showNotification(`Error: ${data.message}`, 'negative')
 
