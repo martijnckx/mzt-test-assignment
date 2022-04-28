@@ -41,8 +41,6 @@
       }
 
       function contactCandidate(candidate) {
-         // @todo disable the contact button, since you can only press it once → note "already contacted" (?)
-
          const costOfContact = {{ $costOfContact }};
 
          if (this.coins < costOfContact && !candidate.contacted) {

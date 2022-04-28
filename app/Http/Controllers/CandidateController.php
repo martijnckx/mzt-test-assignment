@@ -21,12 +21,7 @@ class CandidateController extends Controller
         ]), $code)
         ->header('Content-Type', 'application/json');
     }
-
-    private function isJson($string) {
-        json_decode($string);
-        return json_last_error() === JSON_ERROR_NONE;
-     }
-
+    
     public function index(){
         $company = Company::find(1);
         $candidates = Candidate::all();
