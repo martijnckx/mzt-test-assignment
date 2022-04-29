@@ -199,7 +199,3 @@ I did quite a bit of manual testing instead, using the browser and Burp Suite, t
 - Changed top bar with coins balance to a fixed position to still see it when scrolling.
 - Made the top element a Tailwind container to set a max width for easier viewing on very wide screens.
 - Pulled out some parts of the page into their own Vue components.
-
-## Notes
-
-- @todo: Hide candidate when hired
