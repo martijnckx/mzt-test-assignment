@@ -36,7 +36,11 @@ export default {
 
             setTimeout(function() {
                 this.notifications.shift();
-            }.bind(this), 5000);
+            }.bind(this), 2000);
+
+            // This source mentions 6 seconds as an appropriate accessible time to display notifications:
+            // https://sheribyrnehaber.medium.com/designing-toast-messages-for-accessibility-fb610ac364be#:~:text=A%20good%20length%20of%20time,best%20practice%20is%206%20seconds.
+            // But for this test app it is easier to work with 2 seconds. Readable, but not taking up space for too long 😄.
         },
     },
 }
