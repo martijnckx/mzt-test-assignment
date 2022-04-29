@@ -113,8 +113,11 @@ class CandidateController extends Controller
         $candidateId = $this->parseNumericId(json_decode($request->getContent()), 'candidate');
         $candidate = $this->findCandidate($candidateId);
 
-        if (!empty($candidate->hiredBy) && $candidate->hiredBy->id !== $company->id) {
-            return $this->errorResponse(424, 'candidate is already hired by another company');
+        if (!empty($candidate->hiredBy)) {
+            if ($candidate->hiredBy->id !== $company->id)
+                return $this->errorResponse(424, 'candidate is already hired by another company');
+            else
+                return $this->errorResponse(424, 'you already hired this candidate');
         }
 
         if (!$company->candidates->contains($candidate)) {

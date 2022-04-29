@@ -21,7 +21,7 @@
 </head>
 
 <body>
-   <div id="app">
+   <div id="app" class="container mx-auto relative">
       <notifications ref="notifications"></notifications>
       <wallet :coins="coins"></wallet>
       <candidates @contact-candidate="contactCandidate" @hire-candidate="hireCandidate" :candidates="candidates">

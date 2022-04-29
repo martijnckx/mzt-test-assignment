@@ -5,7 +5,8 @@
         </div>
         <div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
  <div v-for="candidate in candidates" class="rounded overflow-hidden shadow-lg" :key="candidate.id">
-      <img class="w-full" src="/avatar.png" :alt="`Profile picture of ${candidate.name}`">
+       <!-- Photos from https://thesecatsdonotexist.com/ -->
+      <img class="w-full" :src="`https://d2ph5fj80uercy.cloudfront.net/05/cat${candidate.id}.jpg`" :alt="`Profile picture of ${candidate.name}`">
   <div class="px-6 py-4"><div class="font-bold text-xl mb-2">{{candidate.name}}</div><p class="text-gray-700 text-base">{{candidate.description}}</p>
                 </div>
        <div class="px-6 pt-4 pb-2"><span v-for="strength in JSON.parse(candidate.strengths)" class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2" :key="strength + candidate.id">{{strength}}</span>

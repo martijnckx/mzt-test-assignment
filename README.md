@@ -70,12 +70,12 @@ Since really a company's only function in the app is to have a name and a wallet
 class Company extends Model
 {
     ...
-    protected $with = ['author'];
+    protected $with = ['wallet'];
     ...
 }
 ```
 
-Foor good measure, I also defined the inverse relationship:
+For good measure, I also defined the inverse relationship:
 
 ```php
 class Wallet extends Model
@@ -163,11 +163,21 @@ The hire button was implemented similarly to the contact button, so I'll limit t
 
 Firstly, the relationship here is a OneToMany, since a candidate can only be hired by a single company, and a company can hire multiple candidates.
 
+As defined in the assignment, the implementation makes sure a candidate was contacted before by a company.
+
+The function which handles hire requests also checks if a particular candidate was not hired yet, as it wouldn't be allowed in both scenarios (hired by yourself [double refund] or hired by another company).
+
+When a candidate is hired by a company, it is removed from the candidates list. Initially, on hire, by the browser. But it's also taken into account when loading the page, as the only candidates that get sent to the browser are the ones which do not have a `hiredBy` relationship: `$candidates = Candidate::doesntHave('hiredBy')->get()`.
+
+## Quality of life improvements
+
+- Added foreign key constraints to newly created columns in the database.
+- Added alt tags to the images, for improved accessibility (and the images are cute cats now).
+- Fixed the fact that the app was leaking all email addresses through the blade template (printing the entire candidates object).
+- Changed top bar with coins balance to a fixed position to still see it when scrolling.
+- Made the top element a Tailwind container to set a max width for easier viewing on very wide screens.
+
 ## Notes
 
-- The database doesn't seem to have foreign key constraints set on existing tables. It would be good practise to configure these.
-- Added alt tags to the images
-- Fixed the fact that the app was leaking all email addresses through the blade template (printing the entire candidates object)
-- Made wallet bar fixed position to still see it when scrolling
 - @todo: Shorter functions
 - @todo: Hide candidate when hired

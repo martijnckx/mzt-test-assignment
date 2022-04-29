@@ -1,10 +1,14 @@
 <template>
-    <div class="fixed top-17 right-3 w-80 z-10">
-        <div class="bg-slate-100 bg-red-100 bg-green-100 border-slate-400 border-red-400 border-green-400 text-slate-700 text-red-700 text-green-700 hidden"></div>
-        <div :class="[`bg-${notification.colour}-100`,`border-${notification.colour}-400`,`text-${notification.colour}-700`]" class="border px-4 py-3 rounded my-2" role="alert" v-for="notification in notifications" :key="notification.id">
-            <span class="block sm:inline">{{notification.message}}</span>
+        <div class="fixed top-17 right-3 w-full z-10">
+            <div class="container mx-auto relative">
+                <div class="w-80 absolute top-0 right-0">
+                    <div class="bg-slate-100 bg-red-100 bg-green-100 border-slate-400 border-red-400 border-green-400 text-slate-700 text-red-700 text-green-700 hidden"></div>
+                    <div :class="[`bg-${notification.colour}-100`,`border-${notification.colour}-400`,`text-${notification.colour}-700`]" class="border px-4 py-3 rounded my-2" role="alert" v-for="notification in notifications" :key="notification.id">
+                        <span class="block sm:inline">{{notification.message}}</span>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 </template>
 
 <script>
