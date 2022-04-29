@@ -157,6 +157,12 @@ If for some reason contacting the candidate failed, the user gets a red notifica
 
 I also want to indicate to the user that the application is working on it as soon as the user clicks the button, so I added another notification to signal that. Another option would be to add a spinner or change the button text to something like 'Contacting' or 'Please wait...', or disable the button temporarily.
 
+### Second feature: the 'hire' button
+
+The hire button was implemented similarly to the contact button, so I'll limit this description to some key differences.
+
+Firstly, the relationship here is a OneToMany, since a candidate can only be hired by a single company, and a company can hire multiple candidates.
+
 ## Notes
 
 - The database doesn't seem to have foreign key constraints set on existing tables. It would be good practise to configure these.
@@ -164,3 +170,4 @@ I also want to indicate to the user that the application is working on it as soo
 - Fixed the fact that the app was leaking all email addresses through the blade template (printing the entire candidates object)
 - Made wallet bar fixed position to still see it when scrolling
 - @todo: Shorter functions
+- @todo: Hide candidate when hired

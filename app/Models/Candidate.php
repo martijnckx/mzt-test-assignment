@@ -12,4 +12,9 @@ class Candidate extends Model
     public function contactedBy() {
         return $this->belongsToMany(Company::class, 'company_candidates')->withTimestamps();
     }
+
+    public function hiredBy()
+    {
+        return $this->belongsTo(Company::class, 'hired_by');
+    }
 }

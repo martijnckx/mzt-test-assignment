@@ -12,7 +12,7 @@
       </div>
   <div class="p-6 float-right">
      <button @click="$emit('contact-candidate', candidate)" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Contact {{ candidate.contacted ? 'again' : '' }}</button>
-    <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 hover:bg-teal-100 rounded shadow disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-inherit" :disabled="!candidate.contacted">Hire</button>
+    <button @click="$emit('hire-candidate', candidate)" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 hover:bg-teal-100 rounded shadow disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-inherit" :disabled="!candidate.contacted">Hire</button>
      </div>
      </div>
         </div>
@@ -22,6 +22,9 @@
 <script>
 export default {
     props: ['candidates'],
-    emits: ['contact-candidate'],
+    emits: [
+        'contact-candidate',
+        'hire-candidate',
+    ],
 }
 </script>

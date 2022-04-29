@@ -24,7 +24,7 @@
    <div id="app">
       <notifications ref="notifications"></notifications>
       <wallet :coins="coins"></wallet>
-      <candidates @contact-candidate="contactCandidate" :candidates="candidates">
+      <candidates @contact-candidate="contactCandidate" @hire-candidate="hireCandidate" :candidates="candidates">
       </candidates>
    </div>
 
@@ -38,6 +38,38 @@
                this.candidates[i].contacted = candidate.contacted;
             }
          }
+      }
+
+      function hireCandidate(candidate) {
+         // if (!candidate.contacted) {
+         //    this.$refs.notifications.showNotification('Error: candidate must be contacted first', 'negative');
+         //    return;
+         // }
+
+         this.$refs.notifications.showNotification(`Hiring ${candidate.name}...`);
+
+         fetch('/candidates-hire', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+               'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({
+               candidate: candidate.id,
+            }),
+         })
+            .then(response => response.json())
+            .then(data => {
+               if (data.status === 'success') {
+                  candidate.contacted = true;
+                  this.coins = data.coins;
+                  this.updateCandidate(candidate);
+                  this.$refs.notifications.showNotification(`${candidate.name} has been hired!`, 'positive');
+               } else {
+                  this.$refs.notifications.showNotification(`Error: ${data.message}`, 'negative');
+
+               }
+            });
       }
 
       function contactCandidate(candidate) {

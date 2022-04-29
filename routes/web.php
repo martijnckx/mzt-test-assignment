@@ -20,3 +20,4 @@ Route::get('/', function () {
 
 Route::get('candidates-list', [CandidateController::class, 'index']);
 Route::post('candidates-contact', [CandidateController::class, 'contact']);
+Route::post('candidates-hire', [CandidateController::class, 'hire']);

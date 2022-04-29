@@ -18,4 +18,9 @@ class Company extends Model
     public function candidates() {
         return $this->belongsToMany(Candidate::class, 'company_candidates')->withTimestamps();
     }
+
+    public function hires()
+    {
+        return $this->hasMany(Candidate::class, 'hired_by');
+    }
 }
