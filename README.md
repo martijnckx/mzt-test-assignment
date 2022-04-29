@@ -169,6 +169,26 @@ The function which handles hire requests also checks if a particular candidate w
 
 When a candidate is hired by a company, it is removed from the candidates list. Initially, on hire, by the browser. But it's also taken into account when loading the page, as the only candidates that get sent to the browser are the ones which do not have a `hiredBy` relationship: `$candidates = Candidate::doesntHave('hiredBy')->get()`.
 
+### Testing
+
+As I have indicated in my job application, I don't have active experience with testing yet. I know about the general types of testing (like unit, feature / integration, end-to-end), know I can create them with `php artisan make:test UserTest` and run them with `php artisan test`. That said, I haven't actually used any of those extensively.
+
+A feature that feels like it could use some test is wallets. Contacting a candidate, contacting the same candidate again, hiring them and checking if the balance stays correct along the way. I didn't implement those.
+
+After reading some documentation, I believe I would start a test a little something like this:
+
+```php
+$company = Company::factory()
+                    ->has(Wallet::factory())
+                    ->make();
+
+$candidate = Candidate::factory()
+                        ->count(2)
+                        ->make();
+```
+
+But I'm unsure (yet keen to learn, but rather short on time right now) how to use those with the `CandidateController`'s functions, as they hard code `Company::find(1)` for now, as authentication is not in scope for this assignment and I don't believe I'm supposed to clone its implementation (that would kinda miss the point, wouldn't it?).
+
 ## Quality of life improvements
 
 - Added foreign key constraints to newly created columns in the database.
