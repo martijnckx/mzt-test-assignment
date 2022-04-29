@@ -103,7 +103,7 @@ I'll make a few assumptions:
 
 - A company can contact a candidate more than once, to account for undelivered / missed emails.
 - Contacting the same person more than once does not result in extra costs
-- The UI should indicate when you last contacted a candidate
+- The UI should indicate if you already contacted a candidate
 - Ideally, there's some kind of spam protection in place (eg. limit on contacts per day / based on email activity) → not developing this as part of the assignment
 
 #### Clicking the button
@@ -187,15 +187,17 @@ $candidate = Candidate::factory()
                         ->make();
 ```
 
-But I'm unsure (yet keen to learn, but rather short on time right now) how to use those with the `CandidateController`'s functions, as they hard code `Company::find(1)` for now, as authentication is not in scope for this assignment and I don't believe I'm supposed to clone its implementation (that would kinda miss the point, wouldn't it?).
+But I'm unsure, yet keen to learn (but rather short on time right now) how to use those with the `CandidateController`'s functions. Because they hard code `Company::find(1)` and authentication is not in scope for this assignment. Also, I don't believe I'm supposed to clone its implementation (that would kinda miss the point, wouldn't it?).
 
-I did quite a bit of manual testing instead, using the browser and Burp Suite, to intercept my requests and modify them with different / unexpected input.
+I did quite a bit of manual testing instead, using the browser and Burp Suite, to intercept my requests and modify them with different / malformatted input.
 
 ## Quality of life improvements
 
+I made some other changes, listed below
+
+- Fixed the fact that the app was leaking all email addresses through the blade template (printing the entire candidates object).
 - Added foreign key constraints to newly created columns in the database.
 - Added alt tags to the images, for improved accessibility (and the images are cute cats now).
-- Fixed the fact that the app was leaking all email addresses through the blade template (printing the entire candidates object).
 - Changed top bar with coins balance to a fixed position to still see it when scrolling.
 - Made the top element a Tailwind container to set a max width for easier viewing on very wide screens.
 - Pulled out some parts of the page into their own Vue components.

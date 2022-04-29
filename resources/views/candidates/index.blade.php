@@ -24,7 +24,7 @@
    <div id="app" class="container mx-auto relative">
       <notifications ref="notifications"></notifications>
       <wallet :coins="coins"></wallet>
-      <candidates ref="candidatesList" @contact-candidate="contactCandidate" @hire-candidate="hireCandidate" :candidates="candidates">
+      <candidates @contact-candidate="contactCandidate" @hire-candidate="hireCandidate" :candidates="candidates">
       </candidates>
    </div>
 
