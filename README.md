@@ -20,12 +20,12 @@ This is my continuation on [MyZenTeam code test assignment](https://github.com/s
 5. Run `php artisan key:generate`
 6. Run `npm ci && npm run dev`
 7. Create a MySQL database
-8. Create a MySQL user and grant permission to this new database (but nothing extra 😉). I used this command, generated in [TablePlus](https://tableplus.com/):
+8. Create a MySQL user and grant permission to this new database (but nothing extra 😉). I used this command, generated in [TablePlus](https://tableplus.com/) (don't forget to replace {username}, {password}, and {database_name} without the brackets):
 
     ```SQL
-    CREATE USER 'myzenteam_user'@'localhost' IDENTIFIED BY 'xiqhuqwJ9_jp';
+    CREATE USER '{username}'@'localhost' IDENTIFIED BY '{password}';
 
-    GRANT CREATE ROUTINE, CREATE TEMPORARY TABLES, DROP, ALTER ROUTINE, TRIGGER, SHOW VIEW, CREATE, DELETE, EVENT, ALTER, EXECUTE, INSERT, SELECT, CREATE VIEW, INDEX, REFERENCES, GRANT OPTION, UPDATE, LOCK TABLES ON `myzenteam`.* TO 'myzenteam_user'@'localhost';
+    GRANT CREATE ROUTINE, CREATE TEMPORARY TABLES, DROP, ALTER ROUTINE, TRIGGER, SHOW VIEW, CREATE, DELETE, EVENT, ALTER, EXECUTE, INSERT, SELECT, CREATE VIEW, INDEX, REFERENCES, GRANT OPTION, UPDATE, LOCK TABLES ON `{database_name}`.* TO 'myzenteam_user'@'localhost';
 
     FLUSH PRIVILEGES;
     ```
