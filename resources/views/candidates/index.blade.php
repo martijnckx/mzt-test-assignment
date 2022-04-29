@@ -24,7 +24,7 @@
    <div id="app" class="container mx-auto relative">
       <notifications ref="notifications"></notifications>
       <wallet :coins="coins"></wallet>
-      <candidates @contact-candidate="contactCandidate" @hire-candidate="hireCandidate" :candidates="candidates">
+      <candidates ref="candidatesList" @contact-candidate="contactCandidate" @hire-candidate="hireCandidate" :candidates="candidates">
       </candidates>
    </div>
 
@@ -40,11 +40,19 @@
          }
       }
 
+      function removeCandidate(candidate) {
+         for (let i = 0; i < this.candidates.length; i++) {
+            if (this.candidates[i].id === candidate.id) {
+               this.candidates.splice(i, 1);
+            }
+         }
+      }
+
       function hireCandidate(candidate) {
-         // if (!candidate.contacted) {
-         //    this.$refs.notifications.showNotification('Error: candidate must be contacted first', 'negative');
-         //    return;
-         // }
+         if (!candidate.contacted) {
+            this.$refs.notifications.showNotification('Error: candidate must be contacted first', 'negative');
+            return;
+         }
 
          this.$refs.notifications.showNotification(`Hiring ${candidate.name}...`);
 
@@ -62,8 +70,9 @@
             .then(data => {
                if (data.status === 'success') {
                   candidate.contacted = true;
+                  candidate.hired = true;
                   this.coins = data.coins;
-                  this.updateCandidate(candidate);
+                  this.removeCandidate(candidate);
                   this.$refs.notifications.showNotification(`${candidate.name} has been hired!`, 'positive');
                } else {
                   this.$refs.notifications.showNotification(`Error: ${data.message}`, 'negative');

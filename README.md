@@ -189,6 +189,8 @@ $candidate = Candidate::factory()
 
 But I'm unsure (yet keen to learn, but rather short on time right now) how to use those with the `CandidateController`'s functions, as they hard code `Company::find(1)` for now, as authentication is not in scope for this assignment and I don't believe I'm supposed to clone its implementation (that would kinda miss the point, wouldn't it?).
 
+I did quite a bit of manual testing instead, using the browser and Burp Suite, to intercept my requests and modify them with different / unexpected input.
+
 ## Quality of life improvements
 
 - Added foreign key constraints to newly created columns in the database.
@@ -196,8 +198,8 @@ But I'm unsure (yet keen to learn, but rather short on time right now) how to us
 - Fixed the fact that the app was leaking all email addresses through the blade template (printing the entire candidates object).
 - Changed top bar with coins balance to a fixed position to still see it when scrolling.
 - Made the top element a Tailwind container to set a max width for easier viewing on very wide screens.
+- Pulled out some parts of the page into their own Vue components.
 
 ## Notes
 
-- @todo: Shorter functions
 - @todo: Hide candidate when hired

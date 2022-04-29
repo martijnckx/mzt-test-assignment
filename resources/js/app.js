@@ -41,5 +41,6 @@ const app = new Vue({
         contactCandidate: contactCandidate,
         hireCandidate: hireCandidate,
         updateCandidate: updateCandidate,
+        removeCandidate: removeCandidate,
     },
 });

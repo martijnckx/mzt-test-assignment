@@ -79,6 +79,7 @@ class CandidateController extends Controller
             $candidate->contacted = $candidate->contactedBy->contains($company);
             unset($candidate['email']);
             unset($candidate['contactedBy']);
+            unset($candidate['hiredBy']);
         }
 
         $coins = Company::find(1)->wallet->coins;
